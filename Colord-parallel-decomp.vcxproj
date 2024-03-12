@@ -128,6 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Colord-parallel-decomp.cpp" />
+    <ClCompile Include="Parallel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Parallel.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
