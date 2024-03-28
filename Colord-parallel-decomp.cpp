@@ -1,7 +1,21 @@
 #include <iostream>
 #include <filesystem>
+#include "Parallel.h"
+#include "Timer.h"
 
-int main()
+int main(const int argc, char** argv)
 {
-    std::cout << "Hello World!\n";
+	std::ios_base::sync_with_stdio(false);
+
+	Timer timer{};
+	Parallel parallel{};
+
+	if (parallel.parseArguments(argc, argv) != Status::ready)
+	{
+		std::cerr << "Status code: " << static_cast<int>(parallel.getStatus()) << '\n';
+		std::cerr << "Something went wrong! Please make sure that you have included:\n"
+			"--output <output directory> --input <input directory> --colord <colord directory> -m {colord mode} -c {count}\n";
+
+		return -1;
+	}
 }
