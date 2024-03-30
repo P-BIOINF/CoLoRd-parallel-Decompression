@@ -58,7 +58,6 @@ Status Parallel::parseArguments(const int argc, char** argv)
 
 		return getStatus();
 	}
-
 	/**getInputStream().open(getInput());
 
 	std::filesystem::create_directory(getOutput());
@@ -69,11 +68,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 		return getStatus();
 	}
 	*/
-
-
-
 	m_status = Status::ready;
-
 	return getStatus();
 }
 
@@ -88,13 +83,11 @@ void Parallel::getFilesToDecomp()
 	}
 }
 
-
-//kazdy watek bedzie to wywowylal
 void Parallel::decompress()
 {
 	for(const auto& path : m_directories)
 	{
-		handleDecompression(path);
+		handleDecompression(path); //kazdy watek bedzie to wywowylal
 	}
 }
 

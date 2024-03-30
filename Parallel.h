@@ -18,6 +18,7 @@ enum class Status
 class Parallel
 {
 	Status m_status{ Status::not_ready };
+	std::string m_arguments{};
 	std::filesystem::path m_path{}; 
 	std::filesystem::path m_input{};
 	std::filesystem::path m_output{};
