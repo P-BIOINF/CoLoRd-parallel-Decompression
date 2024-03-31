@@ -2,6 +2,8 @@
 
 #include "Timer.h"
 #include <string>
+#include <thread>
+#include <vector>
 #include <filesystem>
 #include <unordered_set>
 
@@ -85,10 +87,11 @@ void Parallel::getFilesToDecomp()
 
 void Parallel::decompress()
 {
-	for(const auto& path : m_directories)
-	{
-		handleDecompression(path); //kazdy watek bedzie to wywowylal
-	}
+	std::vector<std::thread> threads;
+	for (const auto& path : m_directories) 
+		threads.emplace_back(handleDecompression, this, path);
+	for (auto& thread : threads)
+		thread.join();
 }
 
 void Parallel::handleDecompression(const std::filesystem::path& path)

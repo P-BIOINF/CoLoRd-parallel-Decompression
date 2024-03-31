@@ -18,4 +18,7 @@ int main(const int argc, char** argv)
 
 		return -1;
 	}
+
+	parallel.getFilesToDecomp();
+	parallel.decompress();
 }
