@@ -87,6 +87,6 @@ void Parallel::handleDecompression(const std::filesystem::path& path)
 	static int current{0};
 	std::filesystem::path tempOutput(m_output);
 	tempOutput.append(std::to_string(++current) + m_extension.string());
-	const std::string temp{ " " + path.string() + " decompress " + path.string() + tempOutput.string()};
+	const std::string temp{ " " + m_path.string() + " decompress " + path.string() + " " + tempOutput.string()};
 	std::system(temp.c_str());
 }
