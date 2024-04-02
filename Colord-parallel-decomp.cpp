@@ -14,11 +14,12 @@ int main(const int argc, char** argv)
 	{
 		std::cerr << "Status code: " << static_cast<int>(parallel.getStatus()) << '\n';
 		std::cerr << "Something went wrong! Please make sure that you have included:\n"
-			"--output <output directory> --input <input directory> --colord <colord directory> -m {colord mode} -c {count}\n";
+			"--output <output directory> --input <input directory> --colord <colord directory> --count {count}\n";
 
 		return -1;
 	}
 
 	parallel.getFilesToDecomp();
 	parallel.decompress();
+	return 0;
 }

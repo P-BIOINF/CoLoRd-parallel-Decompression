@@ -85,11 +85,11 @@ void Parallel::getFilesToDecomp()
 	}
 }
 
-void Parallel::decompress()
+void Parallel::decompress() 
 {
 	std::vector<std::thread> threads;
 	for (const auto& path : m_directories) 
-		threads.emplace_back(handleDecompression, this, path);
+		threads.emplace_back([this, path] { this->handleDecompression(path); });
 	for (auto& thread : threads)
 		thread.join();
 }
