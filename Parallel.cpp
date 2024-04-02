@@ -74,6 +74,7 @@ void Parallel::getFilesToDecomp()
 
 void Parallel::decompress() 
 {
+	std::filesystem::create_directory(m_output);
 	std::vector<std::thread> threads;
 	for (const auto& path : m_directories) 
 		threads.emplace_back([this, path] { this->handleDecompression(path); });
