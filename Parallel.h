@@ -22,7 +22,6 @@ class Parallel
 	std::filesystem::path m_path{}; 
 	std::filesystem::path m_input{};
 	std::filesystem::path m_output{};
-	std::int64_t m_maxNumberOfFilesDecomp{ 0 };
 	std::filesystem::path m_extension{};
 	std::vector<std::filesystem::path> m_directories{};
 

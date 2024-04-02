@@ -31,19 +31,6 @@ Status Parallel::parseArguments(const int argc, char** argv)
 		{
 			m_extension = argv[++i];
 		}
-		else if (param == "--count")
-		{
-			try
-			{
-				m_maxNumberOfFilesDecomp = std::stoul(argv[++i]);
-			}
-			catch (...)
-			{
-				m_status = Status::failed;
-
-				return getStatus();
-			}
-		}
 		else if (param == "--colord")
 		{
 			m_path = argv[++i];
@@ -54,7 +41,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 		}
 	}
 	m_arguments.append(" ");
-	if (m_path.empty() && m_maxNumberOfFilesDecomp == 0)
+	if (m_path.empty() || m_extension.empty())
 	{
 		m_status = Status::not_ready;
 
