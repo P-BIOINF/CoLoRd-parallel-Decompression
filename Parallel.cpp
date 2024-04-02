@@ -8,6 +8,8 @@
 #include <filesystem>
 #include <unordered_set>
 
+#include <iostream>
+
 Status Parallel::parseArguments(const int argc, char** argv)
 {
 	const std::unordered_set<std::string> setOfOneParam{ "-G", "--reference-genome", "-s","-v","--verbose","-h", "--help" };
@@ -15,7 +17,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 	{
 		if (std::string param{ argv[i] }; param == "--input")
 		{
-			m_input = argv[++i];
+			m_input = std::string(argv[++i]) + "\\";
 			if (!std::filesystem::directory_entry(m_input).exists())
 			{
 				m_status = Status::not_ready;
@@ -25,7 +27,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 		}
 		else if (param == "--output")
 		{
-			m_output = argv[++i];
+			m_output = std::string(argv[++i]) + "\\";
 			m_output.remove_filename();
 		}
 		else if(param == "--extension")
@@ -75,7 +77,10 @@ void Parallel::getFilesToDecomp()
 
 void Parallel::decompress() 
 {
-	std::filesystem::create_directory(m_output);
+	std::filesystem::path temp{m_output};
+	std::filesystem::create_directory(temp);
+	temp.append("temp");
+	std::filesystem::create_directory(temp);
 	std::vector<std::thread> threads;
 	for (const auto& path : m_directories)
 		threads.emplace_back([this, path] { this->handleDecompression(path); });
@@ -87,7 +92,8 @@ void Parallel::handleDecompression(const std::filesystem::path& path)
 {
 	static int current{0};
 	std::filesystem::path tempOutput(m_output);
-	tempOutput.append(std::to_string(++current) + m_extension.string());
+	tempOutput.append("temp");
+	tempOutput.append(std::to_string(++current) + ".fastq");
 	const std::string temp{ " " + m_path.string() + " decompress " + path.string() + " " + tempOutput.string()};
 	std::system(temp.c_str());
 }
@@ -95,14 +101,16 @@ void Parallel::handleDecompression(const std::filesystem::path& path)
 void Parallel::generateOutput()
 {
 	std::filesystem::path temp{m_output};
-	std::filesystem::path outputFile{temp.append("DecompressOutput.fastq")};
+	temp.append("temp");
+	std::filesystem::path tempOutput{m_output};
+	std::filesystem::path outputFile{tempOutput.append("DecompressOutput.fastq")};
 	std::ofstream output{ outputFile.string() };
-	for (auto& file : std::filesystem::directory_iterator(m_output))
+	for (auto& file : std::filesystem::directory_iterator(temp))
 	{
-		std::ifstream temp{ file.path() };
-		output << temp.rdbuf();
-		temp.close();
-		std::filesystem::remove(file);
+		std::ifstream tempStream{ file.path() };
+		output << tempStream.rdbuf();
+		tempStream.close();
 	}
+	std::filesystem::remove_all(temp);
 	output.close();
 }
