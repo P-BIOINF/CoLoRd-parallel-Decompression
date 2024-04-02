@@ -76,7 +76,7 @@ void Parallel::decompress()
 {
 	std::filesystem::create_directory(m_output);
 	std::vector<std::thread> threads;
-	for (const auto& path : m_directories) 
+	for (const auto& path : m_directories)
 		threads.emplace_back([this, path] { this->handleDecompression(path); });
 	for (auto& thread : threads)
 		thread.join();
@@ -86,7 +86,7 @@ void Parallel::handleDecompression(const std::filesystem::path& path)
 {
 	static int current{0};
 	std::filesystem::path tempOutput(m_output);
-	tempOutput.append(std::to_string(current++));
+	tempOutput.append(std::to_string(++current) + m_extension.string());
 	const std::string temp{ " " + path.string() + " decompress " + path.string() + tempOutput.string()};
 	std::system(temp.c_str());
 }
