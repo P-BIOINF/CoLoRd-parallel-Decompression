@@ -21,5 +21,6 @@ int main(const int argc, char** argv)
 
 	parallel.getFilesToDecomp();
 	parallel.decompress();
+	parallel.generateOutput();
 	return 0;
 }

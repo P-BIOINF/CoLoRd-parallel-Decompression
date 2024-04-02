@@ -40,6 +40,8 @@ public:
 	{
 		return m_status;
 	}
+
+	void generateOutput();
 };
 
 #endif

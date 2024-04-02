@@ -4,6 +4,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <fstream>
 #include <filesystem>
 #include <unordered_set>
 
@@ -89,4 +90,19 @@ void Parallel::handleDecompression(const std::filesystem::path& path)
 	tempOutput.append(std::to_string(++current) + m_extension.string());
 	const std::string temp{ " " + m_path.string() + " decompress " + path.string() + " " + tempOutput.string()};
 	std::system(temp.c_str());
+}
+
+void Parallel::generateOutput()
+{
+	std::filesystem::path temp{m_output};
+	std::filesystem::path outputFile{temp.append("DecompressOutput.fastq")};
+	std::ofstream output{ outputFile.string() };
+	for (auto& file : std::filesystem::directory_iterator(m_output))
+	{
+		std::ifstream temp{ file.path() };
+		output << temp.rdbuf();
+		temp.close();
+		std::filesystem::remove(file);
+	}
+	output.close();
 }
