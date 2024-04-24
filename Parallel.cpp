@@ -92,7 +92,8 @@ void Parallel::decompress()
 	std::filesystem::create_directory(temp);
 	temp.append("temp");
 	std::filesystem::create_directory(temp);
-	std::vector<std::thread> threads;
+	std::vector<std::thread> threads{};
+	threads.reserve(m_threads);
 	for (int i = 0; i < m_threads; i++)
 		threads.emplace_back([this]() { this->handleDecompression(); });
 	for (auto& thread : threads)
@@ -124,16 +125,20 @@ void Parallel::generateOutput()
 	std::filesystem::path tempOutput{ m_output };
 	std::filesystem::path outputFile{ tempOutput.append("DecompressedOutput.fastq") };
 	std::ofstream output{ outputFile.string() };
+
 	std::vector<std::ifstream> inputStreams{};
 	for (auto& file : std::filesystem::directory_iterator(temp))
 		inputStreams.emplace_back(file.path());
+
 	std::string identifier{};
 	std::string sequence{};
 	std::string signAndIdentifier{};
 	std::string qualityScores{};
 	std::uint64_t currentSequence{ 0 };
+
 	int currentFile{ 0 };
 	std::vector<int> end(inputStreams.size(), 1);
+
 	while (!inputStreams.empty())
 	{
 		if (std::getline(inputStreams[currentFile], identifier))
@@ -151,11 +156,11 @@ void Parallel::generateOutput()
 		{
 			currentSequence = 0;
 			++currentFile;
-			if (currentFile >= inputStreams.size())
+			if (currentFile >= std::ssize(inputStreams))
 				currentFile = 0;
 			if (end[currentFile] == 0)
 				++currentFile;
-			if (currentFile >= inputStreams.size())
+			if (currentFile >= std::ssize(inputStreams))
 				currentFile = 0;
 		}
 
