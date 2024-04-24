@@ -1,7 +1,6 @@
-#include <iostream>
-#include <filesystem>
-#include "Parallel.h"
 #include "Timer.h"
+#include "Parallel.h"
+#include <iostream>
 
 int main(const int argc, char** argv)
 {
@@ -14,8 +13,7 @@ int main(const int argc, char** argv)
 	{
 		std::cerr << "Status code: " << static_cast<int>(parallel.getStatus()) << '\n';
 		std::cerr << "Something went wrong! Please make sure that you have included:\n"
-			"--output <output directory> --input <input directory> --colord <colord directory> --count {count}\n";
-
+			"--output <output directory> --input <input directory> --colord <colord directory> --extension <file extension to decompress> --lpthread <maximum number of threads> --count <number of sequences after which the next file is moved>\n";
 		return -1;
 	}
 
