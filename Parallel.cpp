@@ -3,12 +3,14 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include <numeric>
+#include <map>
 #include <fstream>
 #include <filesystem>
 #include <unordered_set>
+#include <numeric>
 
 #include <iostream>
+#include <ranges>
 
 Status Parallel::parseArguments(const int argc, char** argv)
 {
@@ -79,11 +81,13 @@ Status Parallel::parseArguments(const int argc, char** argv)
 
 void Parallel::getFilesToDecomp()
 {
+	std::map<int, std::filesystem::path > temp{};
 	for(const auto& entry: std::filesystem::directory_iterator(m_input))
-	{
 		if(entry.path().extension() == m_extension)
-			m_directories.emplace_back(entry);
-	}
+			temp.emplace(std::stoi(entry.path().stem().string()), entry);
+
+	for (const auto& file : temp | std::ranges::views::values)
+		m_directories.emplace_back(file);
 }
 
 void Parallel::decompress()
@@ -127,13 +131,19 @@ void Parallel::generateOutput()
 	std::ofstream output{ outputFile.string() };
 
 	std::vector<std::ifstream> inputStreams{};
-	for (auto& file : std::filesystem::directory_iterator(temp))
-		inputStreams.emplace_back(file.path());
+	std::map<int, std::filesystem::path > tempMap{};
+
+	for (const auto& file : std::filesystem::directory_iterator(temp))
+		tempMap.emplace(std::stoi(file.path().stem().stem().string()), file);
+
+	for (const auto& file : tempMap | std::ranges::views::values)
+		inputStreams.emplace_back(file);
 
 	std::string identifier{};
 	std::string sequence{};
 	std::string signAndIdentifier{};
 	std::string qualityScores{};
+
 	std::uint64_t currentSequence{ 0 };
 
 	int currentFile{ 0 };
@@ -150,18 +160,18 @@ void Parallel::generateOutput()
 		}
 		else
 			end[currentFile] = 0;
+
 		if (std::reduce(end.begin(), end.end(), 0) == 0)
 			break;
+
 		if (++currentSequence == m_count)
 		{
 			currentSequence = 0;
-			++currentFile;
-			if (currentFile >= std::ssize(inputStreams))
+
+			if (++currentFile >= std::ssize(inputStreams))
 				currentFile = 0;
-			if (end[currentFile] == 0)
+			else if (end[currentFile] == 0)
 				++currentFile;
-			if (currentFile >= std::ssize(inputStreams))
-				currentFile = 0;
 		}
 
 	}
@@ -170,3 +180,4 @@ void Parallel::generateOutput()
 	std::filesystem::remove_all(temp);
 	output.close();
 }
+
