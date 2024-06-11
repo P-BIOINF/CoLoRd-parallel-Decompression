@@ -156,7 +156,8 @@ void Parallel::generateOutput()
 			std::getline(inputStreams[currentFile], sequence);
 			std::getline(inputStreams[currentFile], signAndIdentifier);
 			std::getline(inputStreams[currentFile], qualityScores);
-			output << identifier << '\n' << sequence << '\n' << signAndIdentifier << '\n' << qualityScores << '\n';
+			std::string temp{identifier + '\n' + sequence + '\n' + signAndIdentifier + '\n' + qualityScores + '\n'};
+			output.write(temp.data(), temp.size());
 		}
 		else
 			end[currentFile] = 0;
