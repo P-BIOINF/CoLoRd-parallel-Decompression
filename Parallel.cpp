@@ -1,4 +1,4 @@
-﻿#include "C:\\Users\\olekz\\OneDrive\\Pulpit\\C++\\BioInformatyka\\Colord-parallel-decompression\\api\\colord_api.h" // scieszka do colord_api.h
+﻿#include "D:\\C++\\BioInformatyka\\CoLoRd-parallel-Decompression\\api\\colord_api.h" // scieszka do colord_api.h
 #include "Parallel.h"
 #include "Timer.h"
 #include <map>
@@ -175,7 +175,7 @@ void Parallel::generateOutput()
 	temp.append("temp");
 	std::filesystem::path tempOutput{ m_output };
 	std::filesystem::path outputFile{ tempOutput.append("DecompressedOutput.fastq") };
-	std::ofstream output{ outputFile.string() };
+	std::ofstream output{ outputFile.string(), std::ios::binary };
 	std::vector<std::ifstream> inputStreams{};
 	std::map<int, std::filesystem::path > tempMap{};
 	for (const auto& file : std::filesystem::directory_iterator(temp))
