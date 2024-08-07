@@ -29,7 +29,7 @@ class Parallel
 
 	void handleDecompression();
 	void systemDecompression(const std::filesystem::path& path, int current);
-	void API_colordDecompression(const std::filesystem::path& path);
+	void API_colordDecompression(const std::filesystem::path& path, int current);
 
 public:
 	Parallel() = default;

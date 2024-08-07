@@ -117,7 +117,7 @@ void Parallel::handleDecompression()
 		if (index >= m_directories.size())
 			break;
 		if(m_api)
-			API_colordDecompression(m_directories[index]);
+			API_colordDecompression(m_directories[index], index);
 		else
 			systemDecompression(m_directories[index], index);
 	}
@@ -132,12 +132,11 @@ void Parallel::systemDecompression(const std::filesystem::path& path, int curren
 	std::system(temp.c_str());
 }
 
-void Parallel::API_colordDecompression(const std::filesystem::path& path)
+void Parallel::API_colordDecompression(const std::filesystem::path& path, int current)
 {
-	static int current{ 0 };
 	std::filesystem::path tempOutputPath(m_output);
 	tempOutputPath.append("temp");
-	tempOutputPath.append(std::to_string(++current) + ".fastq");
+	tempOutputPath.append(std::to_string(current) + ".fastq");
 	std::ofstream tempOutputFile(tempOutputPath);
 	if (tempOutputFile)
 	{
