@@ -19,7 +19,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 	{
 		if (std::string param{ argv[i] }; param == "--input")
 		{
-			m_input = std::string(argv[++i]) + "\\";
+			m_input = std::string(argv[++i]);
 			if (!std::filesystem::directory_entry(m_input).exists())
 			{
 				m_status = Status::not_ready;
@@ -29,7 +29,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 		}
 		else if (param == "--output")
 		{
-			m_output = std::string(argv[++i]) + "\\";
+			m_output = std::string(argv[++i]);
 			m_output.remove_filename();
 		}
 		else if (param == "--count")
@@ -128,7 +128,7 @@ void Parallel::generateOutput()
 	temp.append("temp");
 	std::filesystem::path tempOutput{ m_output };
 	std::filesystem::path outputFile{ tempOutput.append("DecompressedOutput.fastq") };
-	std::ofstream output{ outputFile.string() };
+	std::ofstream output{ outputFile.string(), std::ios::binary };
 
 	std::vector<std::ifstream> inputStreams{};
 	std::map<int, std::filesystem::path > tempMap{};
@@ -156,9 +156,8 @@ void Parallel::generateOutput()
 			std::getline(inputStreams[currentFile], sequence);
 			std::getline(inputStreams[currentFile], signAndIdentifier);
 			std::getline(inputStreams[currentFile], qualityScores);
-			std::string temp{identifier + '\n' + sequence + '\n' + signAndIdentifier + '\n' + qualityScores + '\n'};
-			output.write(temp.data(), temp.size());
-		}
+			output << identifier << '\n' << sequence << '\n' << signAndIdentifier << '\n' << qualityScores << '\n';
+	}
 		else
 			end[currentFile] = 0;
 
