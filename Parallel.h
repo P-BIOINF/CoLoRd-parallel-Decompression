@@ -28,7 +28,7 @@ class Parallel
 	std::vector<std::filesystem::path> m_directories{};
 
 	void handleDecompression();
-	void systemDecompression(const std::filesystem::path& path);
+	void systemDecompression(const std::filesystem::path& path, int current);
 	void API_colordDecompression(const std::filesystem::path& path);
 
 public:

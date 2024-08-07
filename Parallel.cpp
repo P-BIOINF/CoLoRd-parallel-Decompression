@@ -19,7 +19,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 	{
 		if (std::string param{ argv[i] }; param == "--input")
 		{
-			m_input = std::string(argv[++i]) + "\\";
+			m_input = std::string(argv[++i]);
 			if (!std::filesystem::directory_entry(m_input).exists())
 			{
 				m_status = Status::not_ready;
@@ -29,7 +29,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 		}
 		else if (param == "--output")
 		{
-			m_output = std::string(argv[++i]) + "\\";
+			m_output = std::string(argv[++i]);
 			m_output.remove_filename();
 		}
 		else if (param == "--api")
@@ -119,16 +119,15 @@ void Parallel::handleDecompression()
 		if(m_api)
 			API_colordDecompression(m_directories[index]);
 		else
-			systemDecompression(m_directories[index]);
+			systemDecompression(m_directories[index], index);
 	}
 }
 
-void Parallel::systemDecompression(const std::filesystem::path& path)
+void Parallel::systemDecompression(const std::filesystem::path& path, int current)
 {
-	static int current{0};
 	std::filesystem::path tempOutput(m_output);
 	tempOutput.append("temp");
-	tempOutput.append(std::to_string(++current) + ".fastq");
+	tempOutput.append(std::to_string(current) + ".fastq");
 	const std::string temp{ " " + m_colordPath.string() + " decompress " + path.string() + " " + tempOutput.string()};
 	std::system(temp.c_str());
 }
