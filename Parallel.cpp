@@ -179,7 +179,7 @@ void Parallel::generateOutput()
 	for (const auto& file : std::filesystem::directory_iterator(temp))
 		tempMap.emplace(std::stoi(file.path().stem().stem().string()), file);
 	for (const auto& file : tempMap | std::ranges::views::values)
-		inputStreams.emplace_back(file);
+		inputStreams.emplace_back(file, std::ios::binary);
 	std::string identifier{};
 	std::string sequence{};
 	std::string signAndIdentifier{};
