@@ -1,4 +1,4 @@
-﻿#include "D:\\C++\\BioInformatyka\\CoLoRd-parallel-Decompression\\api\\colord_api.h" // scieszka do colord_api.h
+﻿//#include "D:\\C++\\BioInformatyka\\CoLoRd-parallel-Decompression\\api\\colord_api.h"
 #include "Parallel.h"
 #include "Timer.h"
 #include <map>
@@ -116,8 +116,10 @@ void Parallel::handleDecompression()
 		index = m_pathIndex.fetch_add(1, std::memory_order_relaxed);
 		if (index >= m_directories.size())
 			break;
-		if(m_api)
-			API_colordDecompression(m_directories[index], index);
+		if (m_api)
+		{
+			//API_colordDecompression(m_directories[index], index);
+		}
 		else
 			systemDecompression(m_directories[index], index);
 	}
@@ -132,6 +134,7 @@ void Parallel::systemDecompression(const std::filesystem::path& path, int curren
 	std::system(temp.c_str());
 }
 
+/**
 void Parallel::API_colordDecompression(const std::filesystem::path& path, int current)
 {
 	std::filesystem::path tempOutputPath(m_output);
@@ -166,6 +169,7 @@ void Parallel::API_colordDecompression(const std::filesystem::path& path, int cu
 		}
 	}
 }
+*/
 
 void Parallel::generateOutput()
 {
