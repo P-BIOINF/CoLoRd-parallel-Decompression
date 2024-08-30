@@ -15,6 +15,11 @@ enum class Status
 	max_status,
 };
 
+/**
+* \brief calculates and prints the time difference
+*/
+void displayTime(std::string message, const std::chrono::high_resolution_clock::time_point& start, const std::chrono::high_resolution_clock::time_point& end);
+
 class Parallel
 {
 	bool m_api{ false };

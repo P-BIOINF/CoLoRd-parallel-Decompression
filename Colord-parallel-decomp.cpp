@@ -4,9 +4,9 @@
 
 int main(const int argc, char** argv)
 {
+	std::chrono::high_resolution_clock::time_point start{ std::chrono::high_resolution_clock::now() };
 	std::ios_base::sync_with_stdio(false);
 
-	Timer timer{};
 	Parallel parallel{};
 
 	if (parallel.parseArguments(argc, argv) != Status::ready)
@@ -20,5 +20,7 @@ int main(const int argc, char** argv)
 	parallel.getFilesToDecomp();
 	parallel.decompress();
 	parallel.generateOutput();
+	std::chrono::high_resolution_clock::time_point end{ std::chrono::high_resolution_clock::now() };
+	displayTime("Elapsed time during the entire program: ", start, end);
 	return 0;
 }
