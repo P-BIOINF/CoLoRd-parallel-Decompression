@@ -2,6 +2,7 @@
 #define PARALLEL_H
 #include <string>
 #include <vector>
+#include <chrono>
 #include <atomic>
 #include <utility>
 #include <filesystem>
@@ -27,6 +28,8 @@ class Parallel
 	std::filesystem::path m_colordPath{};
 	std::atomic<std::int64_t> m_pathIndex{ 0 };
 	std::vector<std::filesystem::path> m_directories{};
+	std::chrono::high_resolution_clock::time_point m_decompression_end{};
+	std::chrono::high_resolution_clock::time_point m_decompression_start{};
 
 	void handleDecompression();
 	void systemDecompression(const std::filesystem::path& path, std::int64_t current);
