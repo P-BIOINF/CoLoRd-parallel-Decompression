@@ -2,9 +2,7 @@
 #include "Parallel.h"
 #include "Timer.h"
 #include <map>
-#include <string>
 #include <thread>
-#include <vector>
 #include <ranges>
 #include <fstream>
 #include <numeric>
@@ -15,7 +13,7 @@
 Status Parallel::parseArguments(const int argc, char** argv)
 {
 	const std::unordered_set<std::string> setOfOneParam{ "-G", "--reference-genome", "-s","-v","--verbose","-h", "--help" };
-	for (int i{ 0 }; i < argc; ++i)
+	for (std::int64_t i{ 0 }; i < argc; ++i)
 	{
 		if (std::string param{ argv[i] }; param == "--input")
 		{
@@ -87,7 +85,7 @@ Status Parallel::parseArguments(const int argc, char** argv)
 
 void Parallel::getFilesToDecomp()
 {
-	std::map<int, std::filesystem::path > temp{};
+	std::map<std::int64_t, std::filesystem::path > temp{};
 	for(const auto& entry: std::filesystem::directory_iterator(m_input))
 		if(entry.path().extension() == m_extension)
 			temp.emplace(std::stoi(entry.path().stem().string()), entry);
@@ -102,7 +100,8 @@ void Parallel::decompress()
 	temp.append("temp");
 	std::filesystem::create_directory(temp);
 	std::vector<std::thread> threads{};
-	for (int i = 0; i < m_threads; i++)
+	threads.reserve(m_threads);
+	for (std::int64_t i = 0; i < m_threads; i++)
 		threads.emplace_back([this]() { this->handleDecompression(); });
 	for (auto& thread : threads)
 		thread.join();
@@ -110,22 +109,25 @@ void Parallel::decompress()
 
 void Parallel::handleDecompression()
 {
-	int index{};
+	std::int64_t index{};
 	while (true)
 	{
 		index = m_pathIndex.fetch_add(1, std::memory_order_relaxed);
 		if (index >= m_directories.size())
 			break;
+		systemDecompression(m_directories[index], index);
+		/**
 		if (m_api)
 		{
-			//API_colordDecompression(m_directories[index], index);
+			API_colordDecompression(m_directories[index], index);
 		}
 		else
 			systemDecompression(m_directories[index], index);
+		*/
 	}
 }
 
-void Parallel::systemDecompression(const std::filesystem::path& path, int current)
+void Parallel::systemDecompression(const std::filesystem::path& path, std::int64_t current)
 {
 	std::filesystem::path tempOutput(m_output);
 	tempOutput.append("temp");
@@ -135,7 +137,7 @@ void Parallel::systemDecompression(const std::filesystem::path& path, int curren
 }
 
 /**
-void Parallel::API_colordDecompression(const std::filesystem::path& path, int current)
+void Parallel::API_colordDecompression(const std::filesystem::path& path, std::int64_t current)
 {
 	std::filesystem::path tempOutputPath(m_output);
 	tempOutputPath.append("temp");
@@ -189,8 +191,8 @@ void Parallel::generateOutput()
 	std::string signAndIdentifier{};
 	std::string qualityScores{};
 	std::uint64_t currentSequence{ 0 };
-	int currentFile{ 0 };
-	std::vector<int> end(inputStreams.size(), 1);
+	std::int64_t currentFile{ 0 };
+	std::vector<std::int64_t> end(inputStreams.size(), 1);
 	while (!inputStreams.empty())
 	{
 		if (std::getline(inputStreams[currentFile], identifier))

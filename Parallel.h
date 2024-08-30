@@ -1,10 +1,10 @@
 ﻿#ifndef PARALLEL_H
 #define PARALLEL_H
-#include <utility>
 #include <string>
 #include <vector>
-#include <filesystem>
 #include <atomic>
+#include <utility>
+#include <filesystem>
 
 enum class Status
 {
@@ -16,21 +16,21 @@ enum class Status
 
 class Parallel
 {
-	int m_count{ -1 };
-	int m_threads{ -1 };
 	bool m_api{ false };
 	std::string m_arguments{};
+	std::int64_t m_count{ -1 };
+	std::int64_t m_threads{ -1 };
 	std::filesystem::path m_input{};
 	std::filesystem::path m_output{};
-	std::atomic<int> m_pathIndex{ 0 };
 	std::filesystem::path m_extension{};
 	Status m_status{ Status::not_ready };
 	std::filesystem::path m_colordPath{};
+	std::atomic<std::int64_t> m_pathIndex{ 0 };
 	std::vector<std::filesystem::path> m_directories{};
 
 	void handleDecompression();
-	void systemDecompression(const std::filesystem::path& path, int current);
-	void API_colordDecompression(const std::filesystem::path& path, int current);
+	void systemDecompression(const std::filesystem::path& path, std::int64_t current);
+	//void API_colordDecompression(const std::filesystem::path& path, std::int64_t current);
 
 public:
 	Parallel() = default;
