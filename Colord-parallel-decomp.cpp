@@ -1,6 +1,4 @@
-#include "Timer.h"
 #include "Parallel.h"
-#include <iostream>
 
 int main(const int argc, char** argv)
 {

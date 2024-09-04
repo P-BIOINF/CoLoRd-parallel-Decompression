@@ -5,6 +5,7 @@
 #include <chrono>
 #include <atomic>
 #include <utility>
+#include <iostream>
 #include <filesystem>
 
 enum class Status
@@ -33,6 +34,8 @@ class Parallel
 	std::filesystem::path m_colordPath{};
 	std::atomic<std::int64_t> m_pathIndex{ 0 };
 	std::vector<std::filesystem::path> m_directories{};
+	std::chrono::high_resolution_clock::time_point m_output_end{};
+	std::chrono::high_resolution_clock::time_point m_output_start{};
 	std::chrono::high_resolution_clock::time_point m_decompression_end{};
 	std::chrono::high_resolution_clock::time_point m_decompression_start{};
 

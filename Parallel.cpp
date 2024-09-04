@@ -1,12 +1,10 @@
-﻿//#include "D:\\C++\\BioInformatyka\\CoLoRd-parallel-Decompression\\api\\colord_api.h"
+﻿//#include "\\CoLoRd-parallel-Decompression\\api\\colord_api.h"
 #include "Parallel.h"
-#include "Timer.h"
 #include <map>
 #include <thread>
 #include <ranges>
 #include <fstream>
 #include <numeric>
-#include <iostream>
 #include <filesystem>
 #include <unordered_set>
 
@@ -189,6 +187,7 @@ void Parallel::API_colordDecompression(const std::filesystem::path& path, std::i
 
 void Parallel::generateOutput()
 {
+	m_output_start = std::chrono::high_resolution_clock::now();
 	std::filesystem::path temp{ m_output };
 	temp.append("temp");
 	std::filesystem::path tempOutput{ m_output };
@@ -235,4 +234,6 @@ void Parallel::generateOutput()
 		temporary.close();
 	std::filesystem::remove_all(temp);
 	output.close();
+	m_output_end = std::chrono::high_resolution_clock::now();
+	displayTime("The time elapsed while combining the output files into the final one: ", m_output_start, m_output_end);
 }
